@@ -17,10 +17,33 @@ const search = (ev) => {
 }
 
 const getTracks = (term) => {
-    console.log(`
-        get tracks from spotify based on the search term
-        "${term}" and load them into the #tracks section 
-        of the DOM...`);
+    url= baseURL + "?type=track&q=" + term + "&limit=5";
+   
+    fetch(url)
+     .then(response=>response.json())
+     .then(data=>{
+        document.querySelector("#tracks").innerHTML=``;
+        if (data.length==0){
+            document.querySelector("#tracks").innerHTML=`Nothing`;
+        }
+        else{
+            for (const track of data){ 
+                template=`<section class="track-item preview" data-preview-track="${track.preview_url}">
+                <img src="${track.album.image_url}">
+                <i class="fas play-track fa-play" aria-hidden="true"></i>
+                <div class="label">
+                    <h3>${track.name}</h3>
+                    <p>
+                       ${track.artist.name}
+                    </p>
+                </div>
+            </section>`;
+                document.querySelector("#tracks").innerHTML+=template;
+                console.log(track);
+            } 
+        }
+        
+     })
 };
 
 const getAlbums = (term) => {
@@ -34,7 +57,12 @@ const getArtist = (term) => {
     url= baseURL + "?type=artist&q=" + term;
     fetch(url)
      .then(response=>response.json())
-     .then(data=>displayArtist(data[0]));
+     .then(data=>{
+        if (data.length==0){
+            document.querySelector("#artist").innerHTML=`Nothing`; 
+        }
+        displayArtist(data[0])
+     })
 };
 
 
@@ -47,7 +75,7 @@ document.querySelector('#search').onkeyup = (ev) => {
     }
 };
 const displayArtist=(artist)=>{
-    template=`<section class="artist-card" id="${artist.id}">
+        template=`<section class="artist-card" id="${artist.id}">
             <div>
                  <img src="${artist.image_url}">
                 <h3>${artist.name}</h3>
@@ -58,6 +86,6 @@ const displayArtist=(artist)=>{
         </div>
     </div>
 </section>`;
-document.querySelector("#artist").innerHTML=template;
-
+    document.querySelector("#artist").innerHTML=template; 
 }
+    
