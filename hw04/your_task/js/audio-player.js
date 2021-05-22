@@ -27,7 +27,6 @@ const AudioPlayer = (selector, audioFile) => {
         jumpToTime();
         audio.play();
         playButton.classList.add('fa-pause-circle');
-        
     };
 
     this.pause = () => {

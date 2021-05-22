@@ -16,6 +16,14 @@ const search = (ev) => {
     }
 }
 
+document.querySelector('#search').onkeyup = (ev) => {
+    // Number 13 is the "Enter" key on the keyboard
+    console.log(ev.keyCode);
+    if (ev.keyCode === 13) {
+        ev.preventDefault();
+        search();
+    }
+};
 const getTracks = (term) => {
     url= baseURL + "?type=track&q=" + term + "&limit=5";
    
@@ -24,11 +32,11 @@ const getTracks = (term) => {
      .then(data=>{
         document.querySelector("#tracks").innerHTML=``;
         if (data.length==0){
-            document.querySelector("#tracks").innerHTML=`Nothing`;
+            document.querySelector("#tracks").innerHTML=`Tracks Not Found`;
         }
         else{
             for (const track of data){ 
-                template=`<section class="track-item preview" data-preview-track="${track.preview_url}">
+                template=`<section class="track-item preview" data-preview-track="${track.preview_url}" onclick="playSong(event);">
                 <img src="${track.album.image_url}">
                 <i class="fas play-track fa-play" aria-hidden="true"></i>
                 <div class="label">
@@ -42,16 +50,45 @@ const getTracks = (term) => {
                 console.log(track);
             } 
         }
-        
+     })
+};
+const playSong = (ev) => {
+    document.querySelector("footer > div").innerHTML=`<img src="${ev.currentTarget.children[0].getAttribute("src")}">`;
+    audioPlayer.setAudioFile(ev.currentTarget.getAttribute("data-preview-track"));
+    audioPlayer.play();
+}
+
+
+
+const getAlbums = (term) => {
+    url= baseURL + "?type=album&q=" + term + "&limit=10";
+   
+    fetch(url)
+     .then(response=>response.json())
+     .then(data=>{
+        document.querySelector("#albums").innerHTML=``;
+        if (data.length==0){
+            document.querySelector("#albums").innerHTML=`Albums Not Found`;
+        }
+        else{
+            for (const album of data){ 
+                template=`<section class="album-card" id="${album.id}">
+                <div onclick="swapTracks(event);">
+                    <img src="${album.image_url}">
+                    <h3>${album.name}</h3>
+                    <div class="footer">
+                        <a href="${album.spotify_url}" target="_blank">
+                            view on spotify
+                        </a>
+                    </div>
+                </div>
+            </section>`;
+                document.querySelector("#albums").innerHTML+=template;
+            } 
+        }
      })
 };
 
-const getAlbums = (term) => {
-    console.log(`
-        get albums from spotify based on the search term
-        "${term}" and load them into the #albums section 
-        of the DOM...`);
-};
 
 const getArtist = (term) => {
     url= baseURL + "?type=artist&q=" + term;
@@ -59,33 +96,30 @@ const getArtist = (term) => {
      .then(response=>response.json())
      .then(data=>{
         if (data.length==0){
-            document.querySelector("#artist").innerHTML=`Nothing`; 
+            document.querySelector("#artist").innerHTML=`Artist Not Found`; 
         }
         displayArtist(data[0])
      })
 };
 
-
-document.querySelector('#search').onkeyup = (ev) => {
-    // Number 13 is the "Enter" key on the keyboard
-    console.log(ev.keyCode);
-    if (ev.keyCode === 13) {
-        ev.preventDefault();
-        search();
-    }
-};
 const displayArtist=(artist)=>{
-        template=`<section class="artist-card" id="${artist.id}">
-            <div>
-                 <img src="${artist.image_url}">
+        template=`<section class="artist-card" id="${artist.id}" >
+            <div onclick="swapTracks(event);">
+                <img src="${artist.image_url}">
                 <h3>${artist.name}</h3>
              <div class="footer">
              <a href="${artist.spotify_url}" target="_blank">
                  view on spotify
             </a>
         </div>
-    </div>
+    </div> 
 </section>`;
     document.querySelector("#artist").innerHTML=template; 
 }
+
+const swapTracks=(ev)=>{
+    console.log(ev.currentTarget.children[1].textContent)
+    getTracks(ev.currentTarget.children[1].textContent)
+}
+
     
