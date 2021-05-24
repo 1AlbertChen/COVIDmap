@@ -32,7 +32,7 @@ const getTracks = (term) => {
      .then(data=>{
         document.querySelector("#tracks").innerHTML=``;
         if (data.length==0){
-            document.querySelector("#tracks").innerHTML=`Tracks Not Found`;
+            document.querySelector("#tracks").innerHTML=`No tracks found that match your search criteria`;
         }
         else{
             for (const track of data){ 
@@ -53,9 +53,10 @@ const getTracks = (term) => {
      })
 };
 const playSong = (ev) => {
-    document.querySelector("footer > div").innerHTML=`<img src="${ev.currentTarget.children[0].getAttribute("src")}">`;
+    
     audioPlayer.setAudioFile(ev.currentTarget.getAttribute("data-preview-track"));
     audioPlayer.play();
+    document.querySelector('footer .track-item').innerHTML=ev.currentTarget.innerHTML;
 }
 
 
@@ -68,7 +69,7 @@ const getAlbums = (term) => {
      .then(data=>{
         document.querySelector("#albums").innerHTML=``;
         if (data.length==0){
-            document.querySelector("#albums").innerHTML=`Albums Not Found`;
+            document.querySelector("#albums").innerHTML=`No albums were returned`;
         }
         else{
             for (const album of data){ 
