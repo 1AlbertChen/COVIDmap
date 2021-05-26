@@ -38,6 +38,6 @@ const getCases = (term) => {
             template4=`<h2>${numberWithCommas(data[data.length-1].Active)}</h2>`;
             document.querySelector("#active").innerHTML=template4;
         }
-        
+        console.log(data.Country)
      })
 };

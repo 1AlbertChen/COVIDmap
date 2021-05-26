@@ -37,7 +37,7 @@ footer, #featured-content{
     align-items: center;
     padding: 10px;
 }
-aside,footer, #featured-content{
+aside, footer, #featured-content{
     background-color: rgba(128, 128, 128, 0.233);
     border-radius: 10px;
 }
