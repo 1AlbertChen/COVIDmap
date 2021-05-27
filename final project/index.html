@@ -1,10 +1,26 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>COVID database</title>
         <link rel="stylesheet" href="layout.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-core.min.js" type="text/javascript"></script>
+        <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-map.min.js" type="text/javascript"></script>
+        <script src="https://cdn.anychart.com/releases/8.7.1/geodata/custom/world/world.js" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js" type="text/javascript"></script>
+         <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-data-adapter.min.js"></script>
+        <style>
+            html,
+            body,
+            #container {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            }
+        </style>
     </head>
-    <body id="container">
+    <body>
         <aside id="sidebar">
             <i class="fas fa-search"></i>
                 <input type="search" 
@@ -19,10 +35,6 @@
                 <h1>Deaths:</h1>
                 <section id="deaths"></section>
             </section>
-            <section id="active-section">
-                <h1>Active Cases:</h1>
-                <section id="active"> </section>
-            </section>
             <section id="recover-section">
                 <h1>Recovered:</h1>
                 <section id="recover"> </section>
@@ -32,15 +44,15 @@
         <main>
             <header>
                 <img src="https://common.northwestern.edu/v8/css/images/northwestern.svg">
-                <ul>
-                    <li ><a href="#">World Map</a></li>
-                    <li ><a href="#">US Map</a></li>
-                    <li ><a href="#">Vaccination Tracker</a></li>
-                </ul>
+                <section class="buttons">
+                    <button id="casesmap"><a href="#">Global Cases</a></button>
+                    <button id="deathsmap"><a href="#">Global Deaths</a></button>
+                    <button id="usmap"><a href="#">US Cases</a></button>
+                  </section>
             </header>
         </main>
         <section id="featured-content">
-            Placeholder
+            <div id="container"></div>
         </section>
         <footer>
             <h1>Resources</h1>
@@ -52,5 +64,98 @@
             </ul>
         </footer>
         <script type="text/javascript" src="js/scripts.js"></script>
+        <script>
+
+            anychart.onDocumentReady(function () {
+        
+              // load the data
+              anychart.data.loadJsonFile("https://api.covid19api.com/summary", function (data) {
+        
+                // Variables
+                // go into the records section of the data
+                var geoData = data.Countries;
+        
+                // sum of all cases per country
+                var sumCases = 0;
+        
+                // convert cases to numbers
+                var numC;
+        
+                // create a new array with the resulting data
+                var data = [];
+        
+                // Go through the initial data
+                for (var i = 0; i < geoData.length; i++) {
+                  // convert strings to numbers and save them to new variables
+                  numC = parseInt(geoData[i].TotalConfirmed);
+        
+                  // check if we are in the same country by comparing the geoId. 
+                  // if the country is the same add the cases to the appropriate variables
+                  if ((geoData[i + 1]) != null && (geoData[i].CountryCode == geoData[i + 1].CountryCode)) {
+                    sumCases = sumCases + numC;
+                  }
+                  else {
+        
+                    // add last day cases of the same country
+                    sumCases = sumCases + numC;
+        
+                    // insert the resulting data in the array using the AnyChart keywords 
+                    data.push({ id: geoData[i].CountryCode, value: sumCases, title: geoData[i].Country})
+        
+                    // reset the variables to start over
+                    sumCases = 0;
+        
+                  }
+                };
+        
+                // connect the data with the map
+                var chart = anychart.map(data);
+                chart.geoData(anychart.maps.world);
+        
+                // specify the chart type and set the series 
+                var series = chart.choropleth(data);
+        
+                // set the chart title
+                chart.title("COVID-19 Global Cases");
+                chart.background().fill("rgb(128,128,128, 0.2)");
+        
+                // color scale ranges
+                ocs = anychart.scales.ordinalColor([
+                  { less: 999 },
+                  { from: 1000, to: 9999 },
+                  { from: 10000, to: 99999 },
+                  { from: 100000, to: 999999 },
+                  { from: 1000000, to: 9999999 },
+                  { greater: 10000000 }
+                ]);
+        
+                // set scale colors
+                ocs.colors(["rgb(262,255,255)", "rgb(229,190,185)", "rgb(211,152,145)", "rgb(192,117,109)", "rgb(158,73,66)", "rgb(140,22,21)"]);
+        
+                // tell the series what to use as a colorRange (colorScale)
+                series.colorScale(ocs);
+        
+                // set the container id
+                chart.container('container');
+                
+                // draw the chart
+                chart.draw();
+                chart.listen("pointClick", function(e){
+                var index = e.iterator.getIndex();
+                var row = geoData[index];
+                function numberWithCommas(x) {
+                    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+                document.querySelector('#cases').innerHTML=`<h2>${numberWithCommas(row.TotalConfirmed)}</h2>`;
+                document.querySelector('#deaths').innerHTML=`<h2>${numberWithCommas(row.TotalDeaths)}</h2>`;
+                document.querySelector('#recover').innerHTML=`<h2>${numberWithCommas(row.TotalRecovered)}</h2>`;
+                
+                });
+              });
+        
+            });
+            
+
+          </script>
     </body>
 </html>
