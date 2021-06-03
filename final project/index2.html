@@ -27,17 +27,21 @@
                     placeholder="Search for Country" 
                     id="search" 
                     value="" />
+            <section id="country-section">
+                <h1>Country/State:</h1>
+                <section id="country"><br></section>
+            </section>
             <section id="case-section">
                 <h1>Cases：</h1>
-                <section id="cases"></section>
+                <section id="cases"><br></section>
             </section>
             <section id="death-section">
                 <h1>Deaths:</h1>
-                <section id="deaths"></section>
+                <section id="deaths"><br></section>
             </section>
             <section id="recover-section">
                 <h1>Recovered:</h1>
-                <section id="recover"> </section>
+                <section id="recover"><br> </section>
             </section>
             
         </aside>
@@ -45,9 +49,9 @@
             <header>
                 <img src="https://common.northwestern.edu/v8/css/images/northwestern.svg">
                 <section class="buttons">
-                    <button id="casesmap"><a href="#">Global Cases</a></button>
-                    <button id="deathsmap"><a href="#">Global Deaths</a></button>
-                    <button id="usmap"><a href="#">US Cases</a></button>
+                    <button id="casesmap"><a href="index1.html">Global Cases</a></button>
+                    <button id="deathsmap"><a href="index2.html">Global Deaths</a></button>
+                    <button id="usmap"><a href="index3.html">US Cases</a></button>
                   </section>
             </header>
         </main>
@@ -65,7 +69,6 @@
         </footer>
         <script type="text/javascript" src="js/scripts.js"></script>
         <script>
-
             anychart.onDocumentReady(function () {
         
               // load the data
@@ -77,34 +80,18 @@
         
                 // sum of all cases per country
                 var sumCases = 0;
-        
-                // convert cases to numbers
                 var numC;
-        
-                // create a new array with the resulting data
                 var data = [];
-        
-                // Go through the initial data
                 for (var i = 0; i < geoData.length; i++) {
-                  // convert strings to numbers and save them to new variables
-                  numC = parseInt(geoData[i].TotalConfirmed);
+                  numC = parseInt(geoData[i].TotalDeaths);
         
-                  // check if we are in the same country by comparing the geoId. 
-                  // if the country is the same add the cases to the appropriate variables
                   if ((geoData[i + 1]) != null && (geoData[i].CountryCode == geoData[i + 1].CountryCode)) {
                     sumCases = sumCases + numC;
                   }
                   else {
-        
-                    // add last day cases of the same country
                     sumCases = sumCases + numC;
-        
-                    // insert the resulting data in the array using the AnyChart keywords 
                     data.push({ id: geoData[i].CountryCode, value: sumCases, title: geoData[i].Country})
-        
-                    // reset the variables to start over
                     sumCases = 0;
-        
                   }
                 };
         
@@ -116,17 +103,17 @@
                 var series = chart.choropleth(data);
         
                 // set the chart title
-                chart.title("COVID-19 Global Cases");
+                chart.title("COVID-19 Global Deaths");
                 chart.background().fill("rgb(128,128,128, 0.2)");
         
                 // color scale ranges
                 ocs = anychart.scales.ordinalColor([
-                  { less: 999 },
+                  { less: 9 },
+                  { from: 10, to: 99 },
+                  { from: 100, to: 999 },
                   { from: 1000, to: 9999 },
                   { from: 10000, to: 99999 },
-                  { from: 100000, to: 999999 },
-                  { from: 1000000, to: 9999999 },
-                  { greater: 10000000 }
+                  { greater: 100000 }
                 ]);
         
                 // set scale colors
@@ -149,13 +136,13 @@
                 document.querySelector('#cases').innerHTML=`<h2>${numberWithCommas(row.TotalConfirmed)}</h2>`;
                 document.querySelector('#deaths').innerHTML=`<h2>${numberWithCommas(row.TotalDeaths)}</h2>`;
                 document.querySelector('#recover').innerHTML=`<h2>${numberWithCommas(row.TotalRecovered)}</h2>`;
-                
+                document.querySelector('#country').innerHTML=`<h2>${row.Country}</h2>`;
+                chart.zoomToFeature(e.point.get('id'));
                 });
+                
               });
-        
+                
             });
-            
-
-          </script>
+            </script>
     </body>
 </html>

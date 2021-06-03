@@ -35,8 +35,8 @@ const getCases = (term) => {
             document.querySelector("#deaths").innerHTML=template2;
             template3=`<h2>${numberWithCommas(data[data.length-1].Recovered)}</h2>`;
             document.querySelector("#recover").innerHTML=template3;
-            template4=`<h2>${numberWithCommas(data[data.length-1].Active)}</h2>`;
-            document.querySelector("#active").innerHTML=template4;
+            template4=`<h2>${data[data.length-1].Country}</h2>`;
+            document.querySelector("#country").innerHTML=template4;
         }
         console.log(data.Country)
      })
