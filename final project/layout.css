@@ -39,7 +39,6 @@ button{
 }
 
 button:hover{
-    font-weight:bold;
     background: rgb(92, 36, 124);
 }
 
