@@ -3,5 +3,6 @@ This COVID-19 Map website collects and displays data from CDC and Johns Hopkins 
 
 ## Features
 - Map
+  - I
 - Search Bar
 ## Data Sources
