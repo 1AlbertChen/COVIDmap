@@ -75,11 +75,21 @@
         </footer>
         <script type="text/javascript" src="js/scripts.js"></script>
         <script>
-        anychart.onDocumentReady(function () {
+            var today = new Date();
+            var lastupdate = new Date(today);
+            lastupdate.setDate(lastupdate.getDate() - 2);
+            var dd = String(lastupdate.getDate()).padStart(2, '0');
+            var mm = String(lastupdate.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = lastupdate.getFullYear();
+            lastupdate = yyyy + '-' + mm + '-' + dd;
+            console.log(lastupdate);
+            url = 'https://data.cdc.gov/resource/9mfq-cb36.json?submission_date='+lastupdate;
+            console.log(url);
+            anychart.onDocumentReady(function () {
               // The data used in this sample can be obtained from the CDN
               // https://cdn.anychart.com/samples/maps-choropleth/dealership-locator/data.json
               anychart.data.loadJsonFile(
-                'https://data.cdc.gov/resource/9mfq-cb36.json?submission_date=2021-06-17',
+                url,
                 function (data) {
                   var baseLink = 'https://en.wikipedia.org/wiki/';
                   // create map chart
@@ -145,10 +155,10 @@
                     function numberWithCommas(x) {
                     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     }
-                    document.querySelector('#cases').innerHTML=`<h2>${numberWithCommas(row.tot_cases)}</h2>`;
-                    document.querySelector('#deaths').innerHTML=`<h2>${numberWithCommas(row.tot_death)}</h2>`;
-                    document.querySelector('#country').innerHTML=`<h2>${row.state}</h2>`;
-                    document.querySelector('#recover').innerHTML=`<h2>Not Avaliable</h2>`;
+                    document.querySelector('#cases').innerHTML=`<b>${numberWithCommas(row.tot_cases)}</b> <small>(+${numberWithCommas(parseInt(row.new_case))})</small>`;
+                    document.querySelector('#deaths').innerHTML=`<b>${numberWithCommas(row.tot_death)}</b> <small>(+${numberWithCommas(parseInt(row.new_death))})</small>`;
+                    document.querySelector('#country').innerHTML=`<b>${row.state}</b>`;
+                    document.querySelector('#recover').innerHTML=`<b>Not Avaliable</b>`;
                     map.zoomToFeature(e.point.get('id'));
                   });
         

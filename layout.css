@@ -2,7 +2,10 @@
     box-sizing: border-box;
     /* color: white; */
     font-family: "gentona",Tahoma,sans-serif;
+}
+h1{
     font-size: 1em;
+
 }
 ul{
     list-style: none;
@@ -88,6 +91,7 @@ aside{
     grid-area: left;
     margin-top:10px;
     padding: 20px;
+    line-height:1.6;
 }
 
 main{
