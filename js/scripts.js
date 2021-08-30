@@ -8,7 +8,7 @@ const search = (ev) => {
     }
 }
 document.querySelector('#search').onkeyup = (ev) => {
-    console.log(ev.keyCode);
+    //console.log(ev.keyCode);
     if (ev.keyCode === 13) {
         ev.preventDefault();
         search();
@@ -29,13 +29,16 @@ const getCases = (term) => {
             document.querySelector("#recover").innerHTML=``;
         }
         else{
-            template1=`<h2>${numberWithCommas(data[data.length-1].Confirmed)}</h2>`;
+            template1=`<b>${numberWithCommas(data[data.length-1].Confirmed)}</b> 
+            <small>(+${numberWithCommas(data[data.length-1].Confirmed-data[data.length-2].Confirmed)})</small>`;
             document.querySelector("#cases").innerHTML=template1;
-            template2=`<h2>${numberWithCommas(data[data.length-1].Deaths)}</h2>`;
+            template2=`<b>${numberWithCommas(data[data.length-1].Deaths)}</b> 
+            <small>(+${numberWithCommas(data[data.length-1].Deaths-data[data.length-2].Deaths)})</small>` ;
             document.querySelector("#deaths").innerHTML=template2;
-            template3=`<h2>${numberWithCommas(data[data.length-1].Recovered)}</h2>`;
+            template3=`<b>${numberWithCommas(data[data.length-1].Recovered)}</b> 
+            <small>(+${numberWithCommas(data[data.length-1].Recovered-data[data.length-2].Recovered)})</small>`;
             document.querySelector("#recover").innerHTML=template3;
-            template4=`<h2>${data[data.length-1].Country}</h2>`;
+            template4=`<b>${data[data.length-1].Country}</b>`;
             document.querySelector("#country").innerHTML=template4;
         }
         console.log(data.Country)
