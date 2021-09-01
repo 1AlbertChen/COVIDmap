@@ -138,13 +138,11 @@
                     .useHtml(true)
                     .titleFormat('{%title}')
                     .format(function () {
-                      var amount =
-                        '<span style="color: #d9d9d9;">ACME has no dealerships in ' +
-                        this.getData('name');
+                      var amount = this.getData('name');
                         amount =
                           '<span style="color: #d9d9d9;">' +
                           'There are <strong><span style="color: #fff;">' +
-                          this.value +
+                          numberWithCommas(this.value) +
                           ' </span></strong>COVID cases in ' +
                           this.getData('title')
                       return amount;

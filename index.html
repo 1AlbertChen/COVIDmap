@@ -114,6 +114,20 @@
                   { from: 1000000, to: 9999999 },
                   { greater: 10000000 }
                 ]);
+
+                chart
+                    .tooltip()
+                    .useHtml(true)
+                    .title({ fontColor: '#7c868e' })
+                    .titleFormat('{%title}')
+                    .format(function () {
+                      return (
+                        'There are <strong><span style="color: #fff;">' +
+                        numberWithCommas(this.value) +
+                        ' </span></strong>COVID cases in ' +
+                        this.getData('title')
+                    );
+                });
         
                 // set scale colors
                 ocs.colors(["rgb(196, 242, 206)", "rgb(123, 237, 211)", "rgb(83, 213, 215)", "rgb(0, 165, 225)", "rgb(45, 88, 189)","rgb(61, 56, 143)"]);
