@@ -25,8 +25,6 @@ const getCases = (term) => {
         if (data.length==0){
             document.querySelector("#cases").innerHTML=``;
             document.querySelector("#deaths").innerHTML=``;
-            document.querySelector("#active").innerHTML=``;
-            document.querySelector("#recover").innerHTML=``;
         }
         else{
             template1=`<b>${numberWithCommas(data[data.length-1].Confirmed)}</b> 
@@ -35,11 +33,8 @@ const getCases = (term) => {
             template2=`<b>${numberWithCommas(data[data.length-1].Deaths)}</b> 
             <small>(+${numberWithCommas(data[data.length-1].Deaths-data[data.length-2].Deaths)})</small>` ;
             document.querySelector("#deaths").innerHTML=template2;
-            template3=`<b>${numberWithCommas(data[data.length-1].Recovered)}</b> 
-            <small>(+${numberWithCommas(data[data.length-1].Recovered-data[data.length-2].Recovered)})</small>`;
-            document.querySelector("#recover").innerHTML=template3;
-            template4=`<b>${data[data.length-1].Country}</b>`;
-            document.querySelector("#country").innerHTML=template4;
+            template3=`<b>${data[data.length-1].Country}</b>`;
+            document.querySelector("#country").innerHTML=template3;
         }
         console.log(data.Country)
      })

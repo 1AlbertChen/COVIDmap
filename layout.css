@@ -103,14 +103,9 @@ footer{
     margin-top: 10px;
 }
 
-#active{
-    color: red;
-}
-#cases{
+
+#cases, #deaths{
     color:red;
-}
-#recover{
-    color: green;
 }
 
 aside #search {

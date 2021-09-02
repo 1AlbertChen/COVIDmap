@@ -45,10 +45,6 @@
                 <h1>Deaths:</h1>
                 <section id="deaths"><br></section>
             </section>
-            <section id="recover-section">
-                <h1>Recovered:</h1>
-                <section id="recover"><br> </section>
-            </section>
             
         </aside>
         <main>
@@ -156,7 +152,6 @@
                     document.querySelector('#cases').innerHTML=`<b>${numberWithCommas(row.tot_cases)}</b> <small>(+${numberWithCommas(parseInt(row.new_case))})</small>`;
                     document.querySelector('#deaths').innerHTML=`<b>${numberWithCommas(row.tot_death)}</b> <small>(+${numberWithCommas(parseInt(row.new_death))})</small>`;
                     document.querySelector('#country').innerHTML=`<b>${row.state}</b>`;
-                    document.querySelector('#recover').innerHTML=`<b>Not Avaliable</b>`;
                     map.zoomToFeature(e.point.get('id'));
                   });
         
