@@ -26,11 +26,10 @@ button a{
 }
 
 .buttons{
-    margin-left: 20px;
+    margin-left: 25px;
 }
 
 button{
-
     background:none;
     color: white;
     border: none;
@@ -55,7 +54,7 @@ header{
 }
 
 header img{
-    padding-left: 20px;
+    padding-left: 40px;
     width:auto;
     height:25%;
     margin-top:10px;
