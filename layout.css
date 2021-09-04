@@ -30,17 +30,16 @@ button a{
 }
 
 button{
-    margin-left:20px;
+
     background:none;
     color: white;
-    float: left;
     border: none;
     outline: none;
     cursor: pointer;
     padding: 8px 16px;
     font-size: 17px;
-    width: 25%;
     border-radius:10px;
+    display: inline-block;
 }
 
 button:hover{
@@ -58,8 +57,9 @@ header{
 header img{
     padding-left: 20px;
     width:auto;
-    height:35%;
+    height:25%;
     margin-top:10px;
+    margin-bottom: 5px;
 }
 
 footer, #mapbox{
@@ -150,10 +150,6 @@ html, body,#container {
 }
 
 @media screen and (max-width: 1000px) {
-    header img{
-        padding-left: 10px;
-        height:25%;
-    }
     ul li a{
         padding: 0 10px;
     }
