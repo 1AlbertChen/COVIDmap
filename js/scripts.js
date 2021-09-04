@@ -8,7 +8,6 @@ const search = (ev) => {
     }
 }
 document.querySelector('#search').onkeyup = (ev) => {
-    //console.log(ev.keyCode);
     if (ev.keyCode === 13) {
         ev.preventDefault();
         search();
@@ -36,6 +35,5 @@ const getCases = (term) => {
             template3=`<b>${data[data.length-1].Country}</b>`;
             document.querySelector("#country").innerHTML=template3;
         }
-        console.log(data.Country)
      })
 };
