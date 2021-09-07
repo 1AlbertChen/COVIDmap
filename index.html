@@ -65,9 +65,9 @@
                 // Variables
                 // go into the records section of the data
                 var geoData = data.Countries;
-        
                 var sumCases = 0;
                 var numC;
+                var date = geoData[0].Date.slice(0,10);
                 var data = [];
                 for (var i = 0; i < geoData.length; i++) {
                   numC = parseInt(geoData[i].TotalConfirmed);
@@ -90,7 +90,7 @@
                 var series = chart.choropleth(data);
         
                 // set the chart title
-                chart.title("COVID-19 Global Cases (Click On Country for More Data)");
+                chart.title("COVID-19 Global Cases (Click On Country for More Data) Last Updated: " + date);
                 chart.background().fill("rgb(128,128,128, 0.2)");
         
                 // color scale ranges

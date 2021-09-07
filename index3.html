@@ -63,17 +63,13 @@
     <script type="text/javascript" src="js/scripts.js"></script>
     <script>
       var today = new Date();
-      var lastupdate = new Date(today);
-      url = 'https://data.cdc.gov/resource/9mfq-cb36.json?submission_date=' + lastupdate;
-
-      lastupdate.setDate(lastupdate.getDate() - 3);
-      
-      var dd = String(lastupdate.getDate()).padStart(2, '0');
-      var mm = String(lastupdate.getMonth() + 1).padStart(2, '0');
-      var yyyy = lastupdate.getFullYear();
-      lastupdate = yyyy + '-' + mm + '-' + dd;
-      url = 'https://data.cdc.gov/resource/9mfq-cb36.json?submission_date=' + lastupdate;
-      console.log(url);
+      var lastUpdate = new Date(today);
+      lastUpdate.setDate(lastUpdate.getDate() - 3);
+      var dd = String(lastUpdate.getDate()).padStart(2, '0');
+      var mm = String(lastUpdate.getMonth() + 1).padStart(2, '0');
+      var yyyy = lastUpdate.getFullYear();
+      var lastUpdateDate = yyyy + '-' + mm + '-' + dd;
+      url = 'https://data.cdc.gov/resource/9mfq-cb36.json?submission_date=' + lastUpdateDate;
 
 
       anychart.onDocumentReady(function () {
@@ -102,7 +98,7 @@
               .useHtml(true)
               .padding([10, 0, 10, 0])
               .text(
-                'COVID Cases by State (Click on State for More Data)'
+                'COVID Cases by State (Click on State for More Data) Last Updated: ' + lastUpdateDate
               );
   
             // create choropleth series for map chart
