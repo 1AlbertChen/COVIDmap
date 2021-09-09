@@ -55,6 +55,7 @@
                 <li ><a href="https://api.covid19api.com/">COVID19 API</a></li>
             </ul>
         </footer>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script type="text/javascript" src="js/scripts.js"></script>
         <script>
             anychart.onDocumentReady(function () {
@@ -130,15 +131,12 @@
                 chart.draw();
 
                 chart.listen("pointClick", function(e){
-                var index = e.iterator.getIndex();
-                var row = geoData[index];
-                function numberWithCommas(x) {
-                    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                }
-                document.querySelector('#cases').innerHTML=`<b>${numberWithCommas(row.TotalConfirmed)}</b> <small>(+${numberWithCommas(row.NewConfirmed)})</small>`;
-                document.querySelector('#deaths').innerHTML=`<b>${numberWithCommas(row.TotalDeaths)}</b> <small>(+${numberWithCommas(row.NewDeaths)})</small>`;
-                document.querySelector('#country').innerHTML=`<b>${row.Country}</b>`;
-                chart.zoomToFeature(e.point.get('id'));
+                    var index = e.iterator.getIndex();
+                    var row = geoData[index];
+                    $('#cases').html(`<b>${numberWithCommas(row.TotalConfirmed)}</b> <small>(+${numberWithCommas(row.NewConfirmed)})</small>`);
+                    $('#deaths').html(`<b>${numberWithCommas(row.TotalDeaths)}</b> <small>(+${numberWithCommas(row.NewDeaths)})</small>`);
+                    $('#country').html(`<b>${row.Country}</b>`);
+                    chart.zoomToFeature(e.point.get('id'));
                 });
               });
         

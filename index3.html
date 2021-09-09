@@ -60,6 +60,7 @@
             
         </ul>
     </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script type="text/javascript" src="js/scripts.js"></script>
     <script>
       var today = new Date();
@@ -132,12 +133,9 @@
             // onclick function for points - redirecting client (based on baseLink variable)
             map.listen('pointClick', function (e) {
               row=geoData[e.pointIndex]
-              function numberWithCommas(x) {
-              return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-              }
-              document.querySelector('#cases').innerHTML=`<b>${numberWithCommas(row.tot_cases)}</b> <small>(+${numberWithCommas(parseInt(row.new_case))})</small>`;
-              document.querySelector('#deaths').innerHTML=`<b>${numberWithCommas(row.tot_death)}</b> <small>(+${numberWithCommas(parseInt(row.new_death))})</small>`;
-              document.querySelector('#country').innerHTML=`<b>${row.state}</b>`;
+              $('#cases').html(`<b>${numberWithCommas(row.tot_cases)}</b> <small>(+${numberWithCommas(parseInt(row.new_case))})</small>`);
+              $('#deaths').html(`<b>${numberWithCommas(row.tot_death)}</b> <small>(+${numberWithCommas(parseInt(row.new_death))})</small>`);
+              $('#country').html(`<b>${row.state}</b>`);
               map.zoomToFeature(e.point.get('id'));
             });
   
