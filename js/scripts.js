@@ -27,10 +27,10 @@ const getCases = (term) => {
         }
         else{
             template1=`<b>${numberWithCommas(data[data.length-1].Confirmed)}</b> 
-            <small>(+${numberWithCommas(data[data.length-1].Confirmed-data[data.length-2].Confirmed)})</small>`;
+            <small>(+${numberWithCommas(data[data.length-1].Confirmed-data[data.length-2].Confirmed)} today)</small>`;
             $("#cases").html(template1);
             template2=`<b>${numberWithCommas(data[data.length-1].Deaths)}</b> 
-            <small>(+${numberWithCommas(data[data.length-1].Deaths-data[data.length-2].Deaths)})</small>` ;
+            <small>(+${numberWithCommas(data[data.length-1].Deaths-data[data.length-2].Deaths)} today)</small>` ;
             $("#deaths").html(template2);
             template3=`<b>${data[data.length-1].Country}</b>`;
             $("#country").html(template3);
