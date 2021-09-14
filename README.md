@@ -1,6 +1,6 @@
 # COVIDmap
 This COVID-19 Map website collects and displays data from CDC and Johns Hopkins University's CSSE.
-The line to the live website is [here](https://1albertchen.github.io/COVIDmap/index.html).
+The link to the live website is [here](https://1albertchen.github.io/COVIDmap/index.html).
 
 ## Features
 - Map
