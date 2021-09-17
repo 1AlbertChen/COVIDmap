@@ -7,8 +7,8 @@ const search = (ev) => {
         ev.preventDefault();
     }
 }
-$('#search').keyup(function( event ) {
-    if ( event.which == 13 ) {
+$('#search').keyup(function(event) {
+    if (event.which == 13) {
       event.preventDefault();
       search();
     }
