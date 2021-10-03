@@ -1,0 +1,149 @@
+:root {
+  --bg-color: #27293d;
+}
+
+.primary-text, .second-text {
+  color: white;
+}
+
+.rounded-full {
+  border-radius: 100%;
+}
+
+body{
+  background-color: #1e1e2f;
+  min-height: 100vh;
+}
+
+#sidebar-wrapper {
+  width: 240px;
+  position: fixed;
+  background-image: url("nightsky.jpg");
+  background-size: cover;
+  min-height: 100vh;
+  margin-left: -15rem;
+  -webkit-transition: margin 0.25s ease-out;
+  -moz-transition: margin 0.25s ease-out;
+  -o-transition: margin 0.25s ease-out;
+  transition: margin 0.25s ease-out;
+}
+
+.overlay-div{
+  height:100%;
+  width: 100%;
+  background: linear-gradient(180deg,#096de0,black);
+  position:absolute;
+  opacity:.7;
+  z-index: 0;
+}
+
+#sidebar-wrapper .sidebar-heading {
+  position: relative;
+}
+
+#sidebar-wrapper .list-group {
+  width: 15rem;
+}
+
+#page-content-wrapper {
+  min-width: 100vw;
+  margin-left: 0px;
+  -webkit-transition: margin 0.25s ease-out;
+  -moz-transition: margin 0.25s ease-out;
+  -o-transition: margin 0.25s ease-out;
+  transition: margin 0.25s ease-out;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  margin-left: 0;
+}
+#wrapper.toggled #page-content-wrapper {
+  margin-left: 240px;
+}
+
+#menu-toggle {
+  cursor: pointer;
+}
+
+.list-group-item {
+  border: none;
+  padding: 20px 30px;
+}
+.list-group-item:hover{
+  color: darkblue;
+}
+
+#collapseMenu{
+  font-size: 0.8em;
+  margin-left:10px;
+}
+
+.p-2{
+  background: var(--bg-color);
+}
+.sink{
+  margin-bottom: 0px;
+}
+#map{
+  background-color: var(--bg-color);
+  height: 100vw;
+  justify-content: center;
+}
+
+#container {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#search{
+  color: #000;
+  padding: 20px;
+  height: 40px;
+  width: 250px;
+  line-height: 40px;
+  border: solid 1px #000;
+  border-radius: 500px;
+  font-size: left;
+  font-size: 1em;
+  font-weight:500;
+}
+
+.carousel-item{
+  text-align: center;
+}
+#carousel{
+  height:50px;
+}
+.carousel-inner{
+  height:100%;
+}
+
+@media (min-width: 1000px) {
+  #sidebar-wrapper {
+    margin-left: 0;
+  }
+  #page-content-wrapper {
+    min-width: 0;
+    margin-left: 240px;
+  }
+  #wrapper.toggled #sidebar-wrapper {
+    margin-left: -15rem;
+  }
+  #wrapper.toggled #page-content-wrapper {
+    margin-left: 0;
+  }
+  #map{
+    height: 35vw;
+  }
+}
+@media (max-width: 500px){
+  #search{
+    width:150px;
+    font-size:small;
+  }
+  #carousel{
+    height:70px;
+  }
+}
