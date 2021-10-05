@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="favicon.ico">
-    <title>COVID Database | Global Deaths</title>
+    <title>COVID Database | US Cases</title>
     <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-core.min.js" type="text/javascript"></script>
     <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-map.min.js" type="text/javascript"></script>
     <script src="https://cdn.anychart.com/releases/8.7.1/geodata/custom/world/world.js" type="text/javascript"></script>
@@ -28,20 +28,20 @@
             <div class="list-group list-group-flush my-3 fw-bold">
                 <a href="index.html" class="list-group-item active-page bg-transparent second-text"><i
                         class="fas fa-globe me-2"></i>Global Cases</a>
-                <a href="global-deaths.html" class="list-group-item bg-transparent second-text"><i
+                <a href="g-deaths.html" class="list-group-item bg-transparent second-text"><i
                         class="fas fa-globe me-2"></i>Global Deaths</a>
-                <a href="#" class="list-group-item bg-transparent second-text"><i
+                <a href="us-cases.html" class="list-group-item bg-transparent second-text"><i
                         class="fas fa-flag-usa me-2"></i>US Cases</a>
-                <a href="#" class="list-group-item bg-transparent second-text"><i
+                <a href="us-deaths.html" class="list-group-item bg-transparent second-text"><i
                         class="fas fa-flag-usa me-2"></i>US Deaths</a>
-                <a href="#collapseMenu" class="list-group-item bg-transparent second-text" data-bs-toggle="collapse" role="button">
+                <a href="#collapseMenu" class="list-group-item bg-transparent second-text" data-bs-toggle="collapse" role="button" >
                 <i class="fas fa-plus-circle me-2"></i>Resources</a>
                 <div class="collapse" id="collapseMenu">
                     <a href="https://data.cdc.gov/Case-Surveillance/United-States-COVID-19-Cases-and-Deaths-by-State-o/9mfq-cb36"
                      class="list-group-item bg-transparent second-text"><i
                         class="fas fa-paperclip me-2"></i>CDC US COVID API</a>
-                    <a href="https://api.covid19api.com/" class="list-group-item bg-transparent second-text"><i
-                        class="fas fa-paperclip me-2"></i>Global COVID API</a>
+                    <a href="https://documenter.getpostman.com/view/1678623/SzfDx54T?version=latest" class="list-group-item bg-transparent second-text"><i
+                        class="fas fa-paperclip me-2"></i>MongoDB COVID API</a>
                 </div>    
             </div>
         </div>
@@ -51,7 +51,7 @@
         <div id="page-content-wrapper">
             <nav class="navbar navbar-expand-md navbar-light bg-transparent py-3 px-4 border-bottom"> 
                 <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
-                <h2 class="fs-4 m-0 primary-text me-auto">Global Deaths</h2>
+                <h2 class="fs-4 m-0 primary-text me-auto">Global Cases</h2>
                 <input  type="search" placeholder="Search Country..." id="search" value="" />               
             </nav>
 
@@ -90,8 +90,11 @@
 
                 <div id="carousel" class="carousel slide mt-3" data-bs-ride="carousel">
                     <div class="carousel-inner d-flex align-items-center" id="carousel-frame">
-                        <div class="carousel-item active text-white" id="summary" data-bs-interval="3000"><br></div>
+                        <div class="carousel-item active text-white" id="summary" data-bs-interval="5000">
+                            <b>Add more countries with the search box above</b>
+                        </div>
                     </div>
+
                     <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Previous</span>
@@ -126,96 +129,100 @@
         };
     </script>
     <script>
+        var globalURL = baseURL+ 'countries_summary?min_date='+ lastDay +'T00:00:00.000Z';
+  
         anychart.onDocumentReady(function () {
-        // load the data
-        anychart.data.loadJsonFile("https://api.covid19api.com/summary", function (data) {
-  
-          // Variables
-          // go into the records section of the data
-          var globalData = data.Global;
-          var geoData = data.Countries;
-  
-          // sum of all cases per country
-          var sumCases = 0;
-          var numC;
-          var date = geoData[0].Date.slice(0,10);
-          var data = [];
-          for (var i = 0; i < geoData.length; i++) {
-            numC = parseInt(geoData[i].TotalDeaths);
-  
-            if ((geoData[i + 1]) != null && (geoData[i].CountryCode == geoData[i + 1].CountryCode)) {
-              sumCases = sumCases + numC;
-            }
-            else {
-              sumCases = sumCases + numC;
-              data.push({ id: geoData[i].CountryCode, value: sumCases, title: geoData[i].Country})
-              sumCases = 0;
-            }
-          };
-  
-          // connect the data with the map
-          var chart = anychart.map(data);
-          chart.geoData(anychart.maps.world);
-  
-          // specify the chart type and set the series 
-          var series = chart.choropleth(data);
-  
-          // set the chart title
-          chart.title("COVID-19 Global Deaths (Click On Country for More Data) Last Updated: " + date);
-          chart.background().fill("rgb(128,128,128, 0.2)");
-  
-          // color scale ranges
-          ocs = anychart.scales.ordinalColor([
-            { less: 9 },
-            { from: 10, to: 99 },
-            { from: 100, to: 999 },
-            { from: 1000, to: 9999 },
-            { from: 10000, to: 99999 },
-            { greater: 100000 }
-          ]);
-          
-          chart
-              .tooltip()
-              .useHtml(true)
-              .title({ fontColor: '#7c868e' })
-              .titleFormat('{%title}')
-              .format(function () {
-                return (
-                  'There are <strong><span style="color: #fff;">' +
-                  numberWithCommas(this.value) +
-                  ' </span></strong>COVID deaths in ' +
-                  this.getData('title')
-              );
+          // load the data
+          anychart.data.loadJsonFile(globalURL, function (data) {
+            var geoData = data;
+            var sumCases = 0;
+            var numC;
+            var data = [];
+            for (var i = 0; i < geoData.length; i++) {
+                var id = '';
+                switch(geoData[i].country){
+                    case "France":
+                        id = "FR";
+                        break;
+                    case "Netherlands":
+                        id = "NL";
+                        break;
+                    case "Denmark":
+                        id = "DK";
+                        break;
+                    case "United Kingdom":
+                        id = "GB";
+                        break;
+                    case "New Zealand":
+                        id = "NZ";
+                        break;
+                    default:
+                        id = geoData[i].country_iso2s[0];
+                }
+                data.push({ id: id, value: Math.floor(geoData[i].confirmed * 1000000 / geoData[i].population), title: geoData[i].country, total: geoData[i].confirmed})
+                
+            };
+            //, value2: Math.floor(geoData[i].confirmed *100000 / population)
+            data.push({ id: 'KP', value: '*censored*', title: 'North Korea', total: '*censored*'})
+            // connect the data with the map
+            var chart = anychart.map(data);
+            chart.geoData(anychart.maps.world);
+    
+            // specify the chart type and set the series 
+            var series = chart.choropleth(data);
+    
+            // set the chart title
+            chart.title("COVID-19 Global Cases Per 1M Population (Click On Country for More Data) Last Updated: " + geoData[0].date.slice(0,10));
+            chart.background().fill("rgb(128,128,128, 0.2)");
+    
+            // color scale ranges
+            ocs = anychart.scales.ordinalColor([
+              { less:  999},
+              { from: 1000, to: 9999 },
+              { from: 10000, to: 49999 },
+              { from: 50000, to: 99999 },
+              { greater: 100000},
+            ]);
+
+            chart
+                .tooltip()
+                .useHtml(true)
+                .title({ fontColor: '#7c868e' })
+                .titleFormat('{%title}')
+                .format(function () {
+                  return (
+                    'There are <strong><span style="color: #fff;">' +
+                    numberWithCommas(this.value) +
+                    ' </span></strong>COVID cases per one million people in ' +
+                    this.getData('title') + ', with a total of ' + numberWithCommas(this.getData('total')) + " cases"
+                );
+            });
+    
+            // set scale colors
+            ocs.colors(["rgb(196, 242, 206)", "rgb(83, 213, 215)", "rgb(0, 165, 225)", "rgb(45, 88, 189)","rgb(61, 56, 143)"]);
+    
+            // tell the series what to use as a colorRange (colorScale)
+            series.colorScale(ocs);
+            chart.legend().enabled(true);
+            chart.legend().itemsSourceMode('categories');
+            // set the container id
+            chart.container('container');
+            // draw the chart
+            chart.draw();
+            $("#spinner").remove();
+            
+            chart.listen("pointClick", function(e){
+                var index = e.iterator.getIndex();
+                var row = geoData[index];
+                $('#cases').html(`<b>${numberWithCommas(row.confirmed)}</b> <small>(+${numberWithCommas(row.confirmed_daily)})</small>`);
+                $('#deaths').html(`<b>${numberWithCommas(row.deaths)}</b> <small>(+${numberWithCommas(row.deaths_daily)})</small>`);
+                $('#country').html(`<b>${row.country}</b>`);
+                chart.zoomToFeature(e.point.get('id'));
+            });
+            
           });
-
-          // set scale colors
-          ocs.colors(["rgb(262,255,255)", "rgb(229,190,185)", "rgb(211,152,145)", "rgb(192,117,109)", "rgb(158,73,66)", "rgb(140,22,21)"]);
-  
-          // tell the series what to use as a colorRange (colorScale)
-          series.colorScale(ocs);
-  
-          // set the container id
-          chart.container('container');
-          
-          // draw the chart
-          chart.draw();
-
-          $("#spinner").remove();
-          
-          chart.listen("pointClick", function(e){
-            var index = e.iterator.getIndex();
-            var row = geoData[index];
-            $('#cases').html(`<b>${numberWithCommas(row.TotalConfirmed)}</b> <small>(+${numberWithCommas(row.NewConfirmed)})</small>`);
-            $('#deaths').html(`<b>${numberWithCommas(row.TotalDeaths)}</b> <small>(+${numberWithCommas(row.NewDeaths)})</small>`);
-            $('#country').html(`<b>${row.Country}</b>`);
-            chart.zoomToFeature(e.point.get('id'));
-          });
-
-          $("#summary").html(`<b>Global Summary</b><b class="text-primarys"> | Cases: </b><b style="color:red;">${numberWithCommas(globalData.TotalConfirmed)} </b><small style="color:red;">(+${numberWithCommas(globalData.NewConfirmed)})</small><b class="text-secondary"> Deaths: </b><b>${numberWithCommas(globalData.TotalDeaths)} </b><small>(+${numberWithCommas(globalData.NewDeaths)})</small>`);
-          
+    
         });
-          
-      });
     </script>
 </body>
 
