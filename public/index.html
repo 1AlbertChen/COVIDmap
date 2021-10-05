@@ -156,6 +156,7 @@
                         data.push({ id: geoData[i].country_iso2s[0], value: geoData[i].confirmed, title: geoData[i].country})
                 }
             };
+            //, value2: Math.floor(geoData[i].confirmed *100000 / population)
             data.push({ id: 'KP', value: '*censored*', title: 'North Korea'})
             // connect the data with the map
             var chart = anychart.map(data);

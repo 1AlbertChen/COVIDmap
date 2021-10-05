@@ -5,7 +5,7 @@ const countrySet = new Set();
 for (let item of countries) countrySet.add(item);
 
 var d = new Date();
-d.setDate(d.getDate()-1)
+d.setDate(d.getDate()-2)
 var dd = String(d.getDate()).padStart(2, '0');
 var mm = String(d.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = d.getFullYear();
