@@ -56,7 +56,7 @@ const getCases = (term) => {
         if (data.length==0){
             $("#cases").html('');
             $("#deaths").html('');
-            $("country").html('');
+            $("#country").html('');
         }
         else{
             var cases = numberWithCommas(data[0].tot_cases)
