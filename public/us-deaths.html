@@ -9,12 +9,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="favicon.ico">
-    <title>COVID Database | Global Cases</title>
-    <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-core.min.js" type="text/javascript"></script>
-    <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-map.min.js" type="text/javascript"></script>
-    <script src="https://cdn.anychart.com/releases/8.7.1/geodata/custom/world/world.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js" type="text/javascript"></script>
-    <script src="https://cdn.anychart.com/releases/8.7.1/js/anychart-data-adapter.min.js"></script>
+    <title>COVID Database | US Deaths</title>
+    <script src="https://cdn.anychart.com/geodata/latest/countries/united_states_of_america/united_states_of_america.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-map.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
+    <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+    <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
@@ -30,9 +34,9 @@
                         class="fas fa-globe me-2"></i>Global Cases</a>
                 <a href="g-deaths.html" class="list-group-item bg-transparent second-text"><i
                         class="fas fa-globe me-2"></i>Global Deaths</a>
-                <a href="us-cases" class="list-group-item bg-transparent second-text"><i
+                <a href="us-cases.html" class="list-group-item bg-transparent second-text"><i
                         class="fas fa-flag-usa me-2"></i>US Cases</a>
-                <a href="us-deaths" class="list-group-item bg-transparent second-text"><i
+                <a href="us-deaths.html" class="list-group-item bg-transparent second-text"><i
                         class="fas fa-flag-usa me-2"></i>US Deaths</a>
                 <a href="#collapseMenu" class="list-group-item bg-transparent second-text" data-bs-toggle="collapse" role="button" >
                 <i class="fas fa-plus-circle me-2"></i>Resources</a>
@@ -51,8 +55,8 @@
         <div id="page-content-wrapper">
             <nav class="navbar navbar-expand-md navbar-light bg-transparent py-3 px-4 border-bottom"> 
                 <i class="fas fa-align-left primary-text fs-4 me-3" id="menu-toggle"></i>
-                <h2 class="fs-4 m-0 primary-text me-auto">Global Cases</h2>
-                <input  type="search" placeholder="Search Country..." id="search" value="" />               
+                <h2 class="fs-4 m-0 primary-text me-auto">US Deaths</h2>
+                <input  type="search" placeholder="Search State..." id="search" value="" />               
             </nav>
 
             <div class="container-fluid px-4">
@@ -61,7 +65,7 @@
                         <div class="p-2 shadow-sm d-flex justify-content-around align-items-center">
                             <div>
                                 <h3 class="fs-6 text-white" id="country"><br></h3>
-                                <p class="fs-5 text-white sink">Country</p>
+                                <p class="fs-5 text-white sink">State</p>
                             </div>
                             <i class="fas fa-globe-americas fs-1 primary-text border rounded-full p-3"></i>
                         </div>
@@ -91,7 +95,7 @@
                 <div id="carousel" class="carousel slide mt-3" data-bs-ride="carousel">
                     <div class="carousel-inner d-flex align-items-center" id="carousel-frame">
                         <div class="carousel-item active text-white" id="summary" data-bs-interval="5000">
-                            <b>Add more countries with the search box above</b>
+                            <b>Add more states with the search box above</b>
                         </div>
                     </div>
 
@@ -117,8 +121,9 @@
         </div>
     </div>
     <!-- /#page-content-wrapper -->
+    <script type="text/javascript" src="js/state.js"></script>
+    <script type="text/javascript" src="js/us-script.js"></script>
     
-    <script type="text/javascript" src="js/scripts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script>
         var el = document.getElementById("wrapper");
@@ -129,100 +134,87 @@
         };
     </script>
     <script>
-        var globalURL = baseURL+ 'countries_summary?min_date='+ lastDay +'T00:00:00.000Z';
+        var usURL =  baseURL + lastDay;
   
         anychart.onDocumentReady(function () {
-          // load the data
-          anychart.data.loadJsonFile(globalURL, function (data) {
+        anychart.data.loadJsonFile(
+          usURL,
+          function (data) {
+            // create map chart
+            var map = anychart.map();
             var geoData = data;
-            var sumCases = 0;
-            var numC;
-            var data = [];
+            var covidData = [];
             for (var i = 0; i < geoData.length; i++) {
-                var id = '';
-                switch(geoData[i].country){
-                    case "France":
-                        id = "FR";
-                        break;
-                    case "Netherlands":
-                        id = "NL";
-                        break;
-                    case "Denmark":
-                        id = "DK";
-                        break;
-                    case "United Kingdom":
-                        id = "GB";
-                        break;
-                    case "New Zealand":
-                        id = "NZ";
-                        break;
-                    default:
-                        id = geoData[i].country_iso2s[0];
-                }
-                data.push({ id: id, value: Math.floor(geoData[i].confirmed * 1000000 / geoData[i].population), title: geoData[i].country, total: geoData[i].confirmed})
-                
-            };
-            //, value2: Math.floor(geoData[i].confirmed *100000 / population)
-            data.push({ id: 'KP', value: '*censored*', title: 'North Korea', total: '*censored*'})
-            // connect the data with the map
-            var chart = anychart.map(data);
-            chart.geoData(anychart.maps.world);
-    
-            // specify the chart type and set the series 
-            var series = chart.choropleth(data);
-    
-            // set the chart title
-            chart.title("COVID-19 Global Cases Per 1M Population (Click On Country for More Data) Last Updated: " + geoData[0].date.slice(0,10));
-            chart.background().fill("rgb(128,128,128, 0.2)");
-    
-            // color scale ranges
+            covidData.push({ id: 'US.'+geoData[i].state, value: Math.floor(geoData[i].tot_death * 1000000 / (stateToPop(abbrState(geoData[i].state,'name')))), total: geoData[i].tot_death, title: abbrState(geoData[i].state,'name')})
+          };
+
+  
+            // settings for map chart
+            map
+              .background('rgb(128,128,128, 0.2)')
+              .padding([10, 0, 10, 10])
+              .geoData('anychart.maps.united_states_of_america')
+              .interactivity({ selectionMode: 'none' });
+  
+            map
+              .title()
+              .enabled(true)
+              .useHtml(true)
+              .padding([10, 0, 10, 0])
+              .text(
+                'COVID Deaths Per 1M Population by State (Click on State for More Data) Last Updated: ' + lastDay
+              );
+  
+            // create choropleth series for map chart
+            var mapSeries = map.choropleth(anychart.data.set(covidData));
             ocs = anychart.scales.ordinalColor([
               { less:  999},
-              { from: 1000, to: 9999 },
-              { from: 10000, to: 49999 },
-              { from: 50000, to: 99999 },
-              { greater: 100000},
+              { from: 1000, to: 1999 },
+              { from: 2000, to: 2499 },
+              { from: 2500, to: 2999 },
+              { greater: 3000},
             ]);
-
-            chart
-                .tooltip()
-                .useHtml(true)
-                .title({ fontColor: '#7c868e' })
-                .titleFormat('{%title}')
-                .format(function () {
-                  return (
+            ocs.colors(["rgb(229,190,185)","rgb(192,117,109)", "rgb(158,73,66)", "rgb(140,22,21)", "rgb(100,0,0)"]);
+            mapSeries.colorScale(ocs);
+              
+            map.legend().enabled(true);
+            map.legend().itemsSourceMode('categories');
+            mapSeries
+              .hovered()
+              .fill(mapSeries.fill())
+              .stroke(mapSeries.stroke());
+  
+            // custom text in tooltips for choropleth series for map chart
+            mapSeries
+              .tooltip()
+              .useHtml(true)
+              .titleFormat('{%title}')
+              .format(function () {
+                var amount = 
+                    '<span style="color: #d9d9d9;">' +
                     'There are <strong><span style="color: #fff;">' +
                     numberWithCommas(this.value) +
-                    ' </span></strong>COVID cases per one million people in ' +
-                    this.getData('title') + ', with a total of ' + numberWithCommas(this.getData('total')) + " cases"
-                );
+                    ' </span></strong>COVID deaths per one million people in ' +
+                    this.getData('title') + ', <br>with a total of ' + numberWithCommas(this.getData('total')) + " deaths"
+                return amount;
+              });
+            // onclick function for points - redirecting client (based on baseLink variable)
+            map.listen('pointClick', function (e) {
+              row=geoData[e.pointIndex]
+              $('#cases').html(`<b>${numberWithCommas(row.tot_cases)}</b> <small>(+${numberWithCommas(parseInt(row.new_case))})</small>`);
+              $('#deaths').html(`<b>${numberWithCommas(row.tot_death)}</b> <small>(+${numberWithCommas(parseInt(row.new_death))})</small>`);
+              $('#country').html(`<b>${abbrState(row.state, 'name')}</b>`);
+              map.zoomToFeature(e.point.get('id'));
             });
-    
-            // set scale colors
-            ocs.colors(["rgb(196, 242, 206)", "rgb(83, 213, 215)", "rgb(0, 165, 225)", "rgb(45, 88, 189)","rgb(61, 56, 143)"]);
-    
-            // tell the series what to use as a colorRange (colorScale)
-            series.colorScale(ocs);
-            chart.legend().enabled(true);
-            chart.legend().itemsSourceMode('categories');
-            // set the container id
-            chart.container('container');
-            // draw the chart
-            chart.draw();
+            
+            // set container id for the chart
+            map.container('container');
+            // initiate chart drawing
+            map.draw();     
             $("#spinner").remove();
-            
-            chart.listen("pointClick", function(e){
-                var index = e.iterator.getIndex();
-                var row = geoData[index];
-                $('#cases').html(`<b>${numberWithCommas(row.confirmed)}</b> <small>(+${numberWithCommas(row.confirmed_daily)})</small>`);
-                $('#deaths').html(`<b>${numberWithCommas(row.deaths)}</b> <small>(+${numberWithCommas(row.deaths_daily)})</small>`);
-                $('#country').html(`<b>${row.country}</b>`);
-                chart.zoomToFeature(e.point.get('id'));
-            });
-            
-          });
-    
-        });
+          }
+        );
+      });
     </script>
 </body>
 

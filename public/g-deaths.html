@@ -172,7 +172,7 @@
             var series = chart.choropleth(data);
     
             // set the chart title
-            chart.title("COVID-19 Global Deaths Per 1M Population (Click On Country for More Data) Last Updated: " + geoData[0].date.slice(0,10));
+            chart.title("Global COVID-19 Deaths Per 1M Population (Click On Country for More Data) Last Updated: " + geoData[0].date.slice(0,10));
             chart.background().fill("rgb(128,128,128, 0.2)");
     
             // color scale ranges
@@ -194,7 +194,7 @@
                     'There are <strong><span style="color: #fff;">' +
                     numberWithCommas(this.value) +
                     ' </span></strong>COVID deaths per one million people in ' +
-                    this.getData('title') + ', with a total of ' + numberWithCommas(this.getData('total')) + " deaths"
+                    this.getData('title') + ', <br>with a total of ' + numberWithCommas(this.getData('total')) + " deaths"
                 );
             });
     
