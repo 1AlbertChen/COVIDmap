@@ -80,6 +80,10 @@ const getCases = (term) => {
      });
 };
 
+$('#menu-toggle').click(function(){
+    $('#wrapper').toggleClass("toggled");
+});
+
 
 
 
